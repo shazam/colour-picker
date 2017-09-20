@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+	<head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script src='spectrum.js'></script>
+        <link rel='stylesheet' href='spectrum.css' />
+	</head>
+
+<body>
+    <center>
+        <div id="shazam" style="width:188px; height:336px; margin-top: 80px; margin-bottom:80px; background-color:#0088ff;"><img src="iPhone.png" style="width:215px; height:433px; margin-top: -48px; margin-left: -13px;"/></div>
+        <input type='text' id="color" style="margin-top:20px;"/>
+        <div id="hex" style="font-family: SF UI Display; margin-top:20px; font-weight:bold; font-size:30px;"></div>
+				<div id="message" style="font-family: SF UI Display; color:#0088ff; margin-top:20px; font-weight:bold; font-size:20px;"></div>
+    </center>
+</body>
+
+<script>
+
+    $("#color").spectrum({
+        flat: true,
+        color: "#0088ff",
+        showButtons: false
+    });
+
+    $("#color").on('move.spectrum', function(e, tinycolor) {
+        var r = tinycolor._r;
+        var g = tinycolor._g;
+        var b = tinycolor._b;
+
+        $("#hex").text(tinycolor.toHexString());
+        $("#shazam").css("background-color", tinycolor.toHexString());
+
+
+				var RGBmax = Math.max(r,g,b);
+				var RGBmin = Math.min(r,g,b);
+
+				var L = (1/2)*((RGBmax+RGBmin)/255);
+
+				//var S = (RGBmax-RGBmin)/(1-Math.abs(2*L-1))/255;
+
+				r = r/255;
+				g = g/255;
+				b = b/255;
+				var H = 0;
+
+				if ((r > g) && (g >= b)) {
+						H = r!=b ? 60*(g-b)/(r-b) : 0;
+				} else if ((g > r) && (r >= b)) {
+				    H = g!=b ? 60*(2 - (r-b)/(g-b)) : 120;
+				} else if ((g >= b) && (b > r)) {
+						H = g!=r ? 60*(2 + (b-r)/(g-r)) : 120;
+				} else if ((b > g) && (g > r)) {
+						H = b!=r ? 60*(4 - (g-r)/(b-r)) : 240;
+				} else if ((b > r) && (r >= g)) {
+						H = b!=g ? 60*(4 + (r-g)/(b-g)) : 240;
+				} else if ((r >= b) && (b > g)) {
+						H = r!=g ? 60*(6 - (b-g)/(r-g)) : 360;
+				} else {
+						H = 0;
+				}
+
+				if (H >= 50 && H <= 190) {
+						if (L > 0.49) {
+							$("#message").text("Your colour is NOT cool");
+						}
+
+						else {
+							$("#message").text("Your colour is cool");
+						}
+				}
+
+				else {
+					if (L > 0.6) {
+						$("#message").text("Your colour is NOT cool");
+					}
+
+					else {
+						$("#message").text("Your colour is cool");
+					}
+				}
+    });
+
+</script>
+
+</html>
